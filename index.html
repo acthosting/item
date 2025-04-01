@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Item Purchase Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff;
+            color: #333;
+            padding: 20px;
+        }
+        h2 {
+            color: #2e8b57;
+            text-align: center;
+        }
+        .form-container {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        .item-row {
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .item-row input {
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid #dddddd;
+        }
+        .item-row input:focus {
+            border-color: #4caf50;
+            outline: none;
+        }
+        button {
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 15px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #calculateBtn {
+            background-color: #2196f3; /* Blue color for calculate button */
+        }
+        #calculateBtn:hover {
+            background-color: #1e88e5;
+        }
+        #addItemBtn {
+            background-color: #ff9800; /* Orange color for add item button */
+        }
+        #addItemBtn:hover {
+            background-color: #fb8c00;
+        }
+        #totalPrice {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-top: 10px;
+            color: #d32f2f; /* Dark red for total price */
+        }
+    </style>
+</head>
+<body>
+
+<div class="form-container">
+    <h2>Item Purchase Form</h2>
+    <form id="purchaseForm">
+        <div id="itemContainer">
+            <div class="item-row">
+                <input type="text" name="itemName[]" placeholder="Item Name" required>
+                <input type="number" name="itemPrice[]" placeholder="Price" required min="0" step="0.01">
+            </div>
+        </div>
+        <button type="button" id="addItemBtn">+ Add More Item</button>
+        <button type="button" id="calculateBtn">Calculate Total</button>
+        <div id="totalPrice"></div>
+        <br>
+        <button type="submit">Submit</button>
+    </form>
+</div>
+
+<script>
+document.getElementById('addItemBtn').addEventListener('click', function() {
+    const container = document.getElementById('itemContainer');
+    const newItemRow = document.createElement('div');
+    newItemRow.className = 'item-row';
+    newItemRow.innerHTML = `
+        <input type="text" name="itemName[]" placeholder="Item Name" required>
+        <input type="number" name="itemPrice[]" placeholder="Price" required min="0" step="0.01">
+    `;
+    container.appendChild(newItemRow);
+});
+
+document.getElementById('calculateBtn').addEventListener('click', function() {
+    const prices = document.querySelectorAll('input[name="itemPrice[]"]');
+    let total = 0;
+    prices.forEach(function(input) {
+        const price = parseFloat(input.value) || 0; // Convert to float, default to 0 if NaN
+        total += price;
+    });
+    document.getElementById('totalPrice').innerText = `Total Price: ₹${total.toFixed(2)}`;
+});
+
+document.getElementById('purchaseForm').addEventListener('submit', function(event) {
+    // Handle form submission logic here
+    event.preventDefault(); // Prevent actual submission for demonstration
+    alert('Form submitted!');
+});
+</script>
+
+</body>
+</html>
