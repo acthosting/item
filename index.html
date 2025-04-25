@@ -3,120 +3,484 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Item Purchase Form</title>
-    <style>
+    <title>Form Submission</title>
+ <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f0f8ff;
+            background: linear-gradient(to right, #FFB6C1, #FF69B4);
             color: #333;
+            margin: 0;
             padding: 20px;
         }
-        h2 {
-            color: #2e8b57;
+
+        h1 {
             text-align: center;
+            color: #ffffff;
         }
-        .form-container {
-            background-color: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+
+        form {
+            background: white;
             padding: 20px;
-            max-width: 500px;
-            margin: 0 auto;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            max-width: 600px;
+            margin: auto;
         }
-        .item-row {
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .item-row input {
-            padding: 10px;
-            border-radius: 4px;
-            border: 1px solid #dddddd;
-        }
-        .item-row input:focus {
-            border-color: #4caf50;
-            outline: none;
-        }
-        button {
-            background-color: #4caf50;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            padding: 10px 15px;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
-        #calculateBtn {
-            background-color: #2196f3; /* Blue color for calculate button */
-        }
-        #calculateBtn:hover {
-            background-color: #1e88e5;
-        }
-        #addItemBtn {
-            background-color: #ff9800; /* Orange color for add item button */
-        }
-        #addItemBtn:hover {
-            background-color: #fb8c00;
-        }
-        #totalPrice {
-            font-size: 1.2em;
+
+        label {
             font-weight: bold;
             margin-top: 10px;
-            color: #d32f2f; /* Dark red for total price */
+            display: block;
+        }
+
+        input[type="text"],
+        input[type="date"],
+        input[type="number"],
+        select,
+        textarea {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin: 8px 0;
+            border: 1px solid #f1f1f1;
+            border-radius: 4px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus,
+        input[type="date"]:focus,
+        input[type="number"]:focus,
+        select:focus,
+        textarea:focus {
+            border-color: #FF69B4;
+            outline: none;
+        }
+
+        button {
+            background-color: #FF69B4;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #FF1493;
+        }
+
+        #dynamic-text-boxes input {
+            margin-top: 10px;
+            font-size: 1rem;
+        }
+
+        .text-box-container {
+            margin-bottom: 20px;
         }
     </style>
+    <script>
+
+const subDefectCodes = {
+            "Self_Declaration": [
+                "Buried Chamber",
+                "Tree cutting",
+                "Sagging",
+                "Fiber burnt",
+                "Loop clamp",
+                "SS Clamp",
+                "Ball marker",
+                "Lid correction",
+                "Pole bend/relocation",
+                "JE Rehab",
+                "Sand Filling",
+                "Chamber damage",
+                "NA",
+                "Others"
+            ],
+            "Civil_work": [
+                "Audit NC clearance",
+                "Buried Chamber Opening",
+                "Cable Laying/Pulling",
+                "Cable Saving",
+                "Chamber installation",
+                "Lid Installation/Replacement",
+                "LMC Correction",
+                "OH2UG",
+                "Raiser Installation",
+                "Temp 2 Permanent",
+                "Trenching",
+                "Unsafe Chamber",
+                "CC WORK"
+            ],
+            "Fiber_Cut": [
+                "Cluster/Community IBD Cable damaged",
+                "LMC Cut",
+                "UG CUT",
+                "UG OH CUT",
+                "UG Cable damaged"
+            ],
+            "Fiber_Error": [
+                "CRC",
+                "High Loss",
+                "Low Power",
+                "Port Flapping"
+            ],
+            "Intentional_Improper_Work": [
+                "JE Disturbed",
+                "TB Disturbed",
+                "Fiber Mismatch"
+            ],
+            "Planned_Activity": [
+                "Audit NC clearance",
+                "Buried Chamber Opening",
+                "Cable Laying/Pulling",
+                "Cable Saving",
+                "CCC - Scope identification",
+                "CCC Route Monitoring Link Clearance",
+                "Chamber Saving",
+                "Fiber Provision",
+                "JE rehab",
+                "LMC Correction",
+                "Locator support",
+                "Migration",
+                "Migration/Re-Location",
+                "Monitoring links",
+                "New route Survey",
+                "OH Laid",
+                "OH Rerouting",
+                "OH to UG Migration",
+                "Online Audit",
+                "Splicing/Straight joint",
+                "TB Rehab",
+                "Temp 2 Permanent",
+                "Temp to Perm Scope of work",
+                "Unsafe chamber",
+                "Scope Of Work"
+            ],
+            "RF_SME_IRU_COM_CORE": [
+                "Core Link",
+                "IRU-VIL",
+                "RF Link",
+                "SME Link",
+                "TCL Link",
+                "RCOM"
+            ],
+            "Single_Fiber_Break": [
+                "Ant bite",
+                "Cluster/Community IBD Cable damaged",
+                "EDFA Issue/Faulty/Rebooted",
+                "Fiber Mismatch",
+                "FMS Disturbed",
+                "JE Damaged",
+                "JE Disturbed",
+                "JE Disturbed O&M",
+                "JE Disturbed PM",
+                "JE Disturbed RR",
+                "LMC Cable Damaged/Disturb",
+                "NM IBD",
+                "Patch Chord Faulty/Issue",
+                "Rat Bite in Chamber",
+                "Rat Bite in FMS",
+                "SFB IN LMC TB",
+                "SFB JE",
+                "SFB UG",
+                "SFB UG OH",
+                "TB Disturbed",
+                "UG SFB",
+                "UGOH Cable Damaged"
+            ],
+            "Support_Function": [
+                "Fiber Provision",
+                "IOLM/OTDR support",
+                "Cable Laying/Pulling",
+                "Cable Saving",
+                "Chamber Saving",
+                "Civil Work",
+                "Dep-Migration Support",
+                "Locator support",
+                "NM OH Issue",
+                "NM Scope",
+                "Link down clearance",
+                "OH Rerouting",
+                "OH to UG Migration RR TEAM",
+                "Online Audit",
+                "Physical Audit",
+                "Route Survey",
+                "Scope Of Work",
+                "Splicing Support"
+            ]
+        };
+
+        function updateSubDefectCodes() {
+            const defectCodeSelect = document.getElementById("defect_code");
+            const subDefectCodeSelect = document.getElementById("sub_defect_code");
+            const selectedDefectCode = defectCodeSelect.value;
+
+            // Clear existing options
+            subDefectCodeSelect.innerHTML = "";
+
+            // Populate sub defect codes based on the selected defect code
+            if (subDefectCodes[selectedDefectCode]) {
+                subDefectCodes[selectedDefectCode].forEach(subDefect => {
+                    const option = document.createElement("option");
+                    option.value = subDefect;
+                    option.textContent = subDefect;
+                    subDefectCodeSelect.appendChild(option);
+                });
+            }
+        }
+
+        function getLiveLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    document.getElementById("live_lat").value = position.coords.latitude;
+                    document.getElementById("live_long").value = position.coords.longitude;
+                }, function() {
+                    alert("Geolocation service failed. Please check your location settings.");
+                });
+            } else {
+                alert("Geolocation is not supported by this browser.");
+            }
+        }
+
+async function submitForm(event) {
+    event.preventDefault(); // Prevent default form submission
+
+    const container = document.getElementById("links");
+    const inputs = container.getElementsByTagName("input");
+    const values = Array.from(inputs).map(input => input.value).filter(value => value); // Get all input values
+    
+    // Debug: Check if the input retrieval is working correctly
+    console.log("Retrieved link values:", values);
+    
+    const date = document.getElementById('date').value;
+    const zone = document.getElementById('zone').value;
+    const shift = document.getElementById('shift').value;
+    const tl_name = document.getElementById('tl_name').value;
+    const live_lat = document.getElementById('live_lat').value;
+    const live_long = document.getElementById('live_long').value;
+    const fiberify_id = document.getElementById('fiberify_id').value;
+    const temp_id_oh_id = document.getElementById('temp_id_oh_id').value;
+    const route_type = document.getElementById('route_type').value;
+    const defect_code = document.getElementById('defect_code').value;
+    const sub_defect_code = document.getElementById('sub_defect_code').value;
+    const ne_name = document.getElementById('ne_name').value;
+    const frt_civil_van = document.getElementById('frt_civil_van').value;
+    const route_id = document.getElementById('route_id').value;
+    const route_name = document.getElementById('route_name').value;
+    const chamber_id_a = document.getElementById('chamber_id_a').value;
+    const lat_long_a = document.getElementById('lat_long_a').value;
+    const chamber_id_b = document.getElementById('chamber_id_b').value;
+    const lat_long_b = document.getElementById('lat_long_b').value;
+    const gis_update = document.getElementById('gis_update').value;
+    const reason_for_incident = document.getElementById('reason_for_incident').value;
+    const agency_for_cut = document.getElementById('agency_for_cut').value;
+    const agency_contact_number = document.getElementById('agency_contact_number').value;
+    const Total_Links = document.getElementById('Total_Links').value;
+
+    // Loop through each link and submit one by one
+    for (const link of values) {
+	let links = link;
+        console.log(`Submitting link: ${link}`); // Debug: Log which link is being submitted
+        const response = await fetch('https://script.google.com/macros/s/AKfycbzGKQZBOaxZjRIYEo36GzwRrC080ByGGkQkvb7OSkHJc551VltIji9nuxuSZ4BrN9fV/exec', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `date=${encodeURIComponent(date)}&zone=${encodeURIComponent(zone)}&shift=${encodeURIComponent(shift)}&tl_name=${encodeURIComponent(tl_name)}&tl_name=${encodeURIComponent(tl_name)}&live_lat=${encodeURIComponent(live_lat)}&live_long=${encodeURIComponent(live_long)}&fiberify_id=${encodeURIComponent(fiberify_id)}&temp_id_oh_id=${encodeURIComponent(temp_id_oh_id)}&route_type=${encodeURIComponent(route_type)}&defect_code=${encodeURIComponent(defect_code)}&ne_name=${encodeURIComponent(ne_name)}&frt_civil_van=${encodeURIComponent(frt_civil_van)}&route_id=${encodeURIComponent(route_id)}&route_name=${encodeURIComponent(route_name)}&chamber_id_a=${encodeURIComponent(chamber_id_a)}&lat_long_a=${encodeURIComponent(lat_long_a)}&chamber_id_b=${encodeURIComponent(chamber_id_b)}&lat_long_b=${encodeURIComponent(lat_long_b)}&gis_update=${encodeURIComponent(gis_update)}&reason_for_incident=${encodeURIComponent(reason_for_incident)}&agency_for_cut=${encodeURIComponent(agency_for_cut)}&agency_contact_number=${encodeURIComponent(agency_contact_number)}&Total_Links=${encodeURIComponent(Total_Links)}&links=${encodeURIComponent(links)}`
+        });
+
+        if (response.ok) {
+            console.log(`Submission of link "${link}" successful!`);
+        } else {
+            console.error(`Submission of link "${link}" failed.`);
+        }
+    }
+
+    // Reset the form after processing all links
+               alert('Submission successful!');
+    document.querySelector('form').reset();
+}
+        function generateTextBoxes() {
+            const numberOfBoxes = document.getElementById("Total_Links").value;
+            const container = document.getElementById("links");
+            
+            // Clear existing text boxes
+            container.innerHTML = "";
+
+            // Create the specified number of text boxes
+            for (let i = 0; i < numberOfBoxes; i++) {
+                const input = document.createElement("input");
+                input.type = "text";
+                input.name = `dynamic-input-${i + 1}`;
+                input.placeholder = `Links Input ${i + 1}`;
+                container.appendChild(input);
+                container.appendChild(document.createElement("br")); // line break for spacing
+            }
+        }
+
+    </script>
 </head>
 <body>
+    <h1>Productivity Entery</h1>
+    <form id="myForm" onsubmit="submitForm(event)">
+        <label for="date">Date:</label>
+        <input type="date" id="date" name="date" >
 
-<div class="form-container">
-    <h2>Item Purchase Form</h2>
-    <form id="purchaseForm">
-        <div id="itemContainer">
-            <div class="item-row">
-                <input type="text" name="itemName[]" placeholder="Item Name" required>
-                <input type="number" name="itemPrice[]" placeholder="Price" required min="0" step="0.01">
-            </div>
+        <label for="zone">Zone:</label>
+        <select id="zone" name="zone">
+            <option value="South">South</option>
+            <option value="North">North</option>
+        </select>
+
+        <label for="shift">Shift:</label>
+        <select id="shift" name="shift">
+            <option value="Night">Night</option>
+            <option value="Day">Day</option>
+        </select>
+
+        <label for="tl_name">TL Name:</label>
+        <select id="tl_name" name="tl_name">
+            <option value="Praveen">Praveen</option>
+            <option value="Sivakumar L">Sivakumar L</option>
+            <option value="Pandiyan">Pandiyan</option>
+            <option value="Shashi Kumar.CC">Shashi Kumar.CC</option>
+        </select>
+
+        <label for="Total_Links">Enter The Number Of Links:</label>
+        <input type="number" id="Total_Links" name="Total_Links" min="0" value="0">
+        <button type="button" onclick="generateTextBoxes()">Generate Text Boxes</button>
+
+        <div id="links" class="text-box-container">
+            <!-- Dynamic text boxes will be generated here -->
         </div>
-        <button type="button" id="addItemBtn">+ Add More Item</button>
-        <button type="button" id="calculateBtn">Calculate Total</button>
-        <div id="totalPrice"></div>
-        <br>
+
+        <label for="live_lat">Live Latitude:</label>
+        <input type="text" id="live_lat" name="live_lat" placeholder="Live Latitude" readonly>
+
+        <label for="live_long">Live Longitude:</label>
+        <input type="text" id="live_long" name="live_long" placeholder="Live Longitude" readonly>
+
+        <button type="button" onclick="getLiveLocation()">Get Live Location</button>
+
+        <label for="fiberify_id">Fiberify ID:</label>
+        <input type="text" id="fiberify_id" name="fiberify_id" >
+
+        <label for="temp_id_oh_id">Temp ID / OH ID:</label>
+        <input type="text" id="temp_id_oh_id" name="temp_id_oh_id">
+
+        <label for="route_type">Type of Route:</label>
+        <select id="route_type" name="route_type">
+            <option value="UG">UG</option>
+            <option value="UG-OH">UG-OH</option>
+            <option value="SOH">SOH</option>
+        </select>
+
+        <label for="defect_code">Defect Code:</label>
+        <select id="defect_code" name="defect_code" onchange="updateSubDefectCodes()">
+            <option value="Self_Declaration">Self_Declaration</option>
+            <option value="Civil_work">Civil_work</option>
+            <option value="Fiber_Cut">Fiber_Cut</option>
+            <option value="Fiber_Error">Fiber_Error</option>
+            <option value="Intentional_Improper_Work">Intentional_Improper_Work</option>
+            <option value="Planned_Activity">Planned_Activity</option>
+            <option value="RF_SME_IRU_COM_CORE">RF_SME_IRU_COM_CORE</option>
+            <option value="Single_Fiber_Break">Single_Fiber_Break</option>
+            <option value="Support_Function">Support_Function</option>
+        </select>
+
+        <label for="sub_defect_code">Sub Defect Code:</label>
+        <select id="sub_defect_code" name="sub_defect_code">
+            <!-- Sub defect codes will be populated based on the selected defect code -->
+        </select>
+
+      <select id="ne_name" name="ne_name">
+            <option value="Davalasab_30697">Davalasab_30697</option>
+            <option value="Ramesh_27244">Ramesh_27244</option>
+            <option value="Shivashankar_32075">Shivashankar_32075</option>
+            <option value="Basavaraj_30170">Basavaraj_30170</option>
+            <option value="Ramanji_28276">Ramanji_28276</option>
+            <option value="Srinivasalu_31069">Srinivasalu_31069</option>
+            <option value="Kesavalu_27159">Kesavalu_27159</option>
+            <option value="Kotresh_28242">Kotresh_28242</option>
+            <option value="Chennakeshav_26990">Chennakeshav_26990</option>
+            <option value="Basavanagowda_26055">Basavanagowda_26055</option>
+            <option value="Mallikarjun Pujar_34285">Mallikarjun Pujar_34285</option>
+            <option value="Sachin Shirol ._28355">Sachin Shirol ._28355</option>
+            <option value="Vasantha Kumar K _31689">Vasantha Kumar K _31689</option>
+            <option value="Nachitha C_34573">Nachitha C_34573</option>
+            <option value="Mallikarjuna Sureshapppa Banakar _31097">Mallikarjuna Sureshapppa Banakar _31097</option>
+            <option value="Raghaveandra K R ._28755">Raghaveandra K R ._28755</option>
+            <option value="Ramu K S _26817">Ramu K S _26817</option>
+            <option value="Papasani Mallikarjunareddy_36613">Papasani Mallikarjunareddy_36613</option>
+            <option value="Balaji K _28354">Balaji K _28354</option>
+            <option value="Gangaraju G_32587">Gangaraju G_32587</option>
+            <option value="Sandeep _30298">Sandeep _30298</option>
+            <option value="Maruthi D _27713">Maruthi D _27713</option>
+            <option value="S Keshava _36879">S Keshava _36879</option>
+            <option value="Maruthi_38811">Maruthi_38811</option>
+        </select>
+
+        <label for="frt_civil_van">FRT / CIVIL / VAN:</label>
+        <select id="frt_civil_van" name="frt_civil_van">
+            <option value="FRT_BSW_24/7">FRT_BSW_24/7</option>
+            <option value="FRT_MLM_24/7">FRT_MLM_24/7</option>
+            <option value="FRT_NAB_24/7">FRT_NAB_24/7</option>
+            <option value="FRT_RTN_24/7">FRT_RTN_24/7</option>
+            <option value="FRT_YEL_24/7">FRT_YEL_24/7</option>
+            <option value="FRT_BLD_24/7">FRT_BLD_24/7</option>
+            <option value="FRT_BSK_24/7">FRT_BSK_24/7</option>
+            <option value="FRT_BTM_24/7">FRT_BTM_24/7</option>
+            <option value="FRT_IND_24/7">FRT_IND_24/7</option>
+            <option value="FRT_SAR_24/7">FRT_SAR_24/7</option>
+            <option value="SVT_Civil 2_12 Hrs">SVT_Civil 2_12 Hrs</option>
+            <option value="Civil_Civil 3_24/7">Civil_Civil 3_24/7</option>
+            <option value="Civil_Civil 1_12 Hrs">Civil_Civil 1_12 Hrs</option>
+            <option value="Civil_Civil 1_24/7">Civil_Civil 1_24/7</option>
+            <option value="Civil_Civil 2_12 Hrs">Civil_Civil 2_12 Hrs</option>
+            <option value="Civil_Civil 1_12 Hrs">Civil_Civil 1_12 Hrs</option>
+            <option value="Civil_Civil 2_12 Hrs">Civil_Civil 2_12 Hrs</option>
+            <option value="Van - OH _12 Hrs">Van - OH _12 Hrs</option>
+            <option value="SVT_BIKE_FRT">SVT_BIKE_FRT</option>
+            <option value="TP_BIKE_FRT">TP_BIKE_FRT</option>
+            <option value="MOHAN-NAB2_24/7">MOHAN-NAB2_24/7</option>
+            <option value="MOHAN - SAR_24/7">MOHAN - SAR_24/7</option>
+            <option value="MOHAN - CIVIL-24/7">MOHAN - CIVIL-24/7</option>
+            <option value="SRS-BLD/SAR">SRS-BLD/SAR</option>
+        </select>
+
+
+        <label for="route_id">Route ID:</label>
+        <input type="text" id="route_id" name="route_id">
+
+        <label for="route_name">Route Name:</label>
+        <input type="text" id="route_name" name="route_name">
+
+        <label for="chamber_id_a">Chamber ID A:</label>
+        <input type="text" id="chamber_id_a" name="chamber_id_a">
+
+        <label for="lat_long_a">Lat/Long A:</label>
+        <input type="text" id="lat_long_a" name="lat_long_a">
+
+        <label for="chamber_id_b">Chamber ID B:</label>
+        <input type="text" id="chamber_id_b" name="chamber_id_b">
+
+        <label for="lat_long_b">Lat/Long B:</label>
+        <input type="text" id="lat_long_b" name="lat_long_b">
+
+        <label for="gis_update">GIS Update:</label>
+        <input type="text" id="gis_update" name="gis_update">
+
+        <label for="reason_for_incident">Reason For Incident:</label>
+        <textarea id="reason_for_incident" name="reason_for_incident" rows="3"></textarea>
+
+        <label for="agency_for_cut">Agency for Cut:</label>
+        <input type="text" id="agency_for_cut" name="agency_for_cut">
+
+        <label for="agency_contact_number">Agency Contact Number:</label>
+        <input type="number" id="agency_contact_number" name="agency_contact_number" >
+
         <button type="submit">Submit</button>
     </form>
-</div>
-
-<script>
-document.getElementById('addItemBtn').addEventListener('click', function() {
-    const container = document.getElementById('itemContainer');
-    const newItemRow = document.createElement('div');
-    newItemRow.className = 'item-row';
-    newItemRow.innerHTML = `
-        <input type="text" name="itemName[]" placeholder="Item Name" required>
-        <input type="number" name="itemPrice[]" placeholder="Price" required min="0" step="0.01">
-    `;
-    container.appendChild(newItemRow);
-});
-
-document.getElementById('calculateBtn').addEventListener('click', function() {
-    const prices = document.querySelectorAll('input[name="itemPrice[]"]');
-    let total = 0;
-    prices.forEach(function(input) {
-        const price = parseFloat(input.value) || 0; // Convert to float, default to 0 if NaN
-        total += price;
-    });
-    document.getElementById('totalPrice').innerText = `Total Price: ₹${total.toFixed(2)}`;
-});
-
-document.getElementById('purchaseForm').addEventListener('submit', function(event) {
-    // Handle form submission logic here
-    event.preventDefault(); // Prevent actual submission for demonstration
-    alert('Form submitted!');
-});
-</script>
-
 </body>
 </html>
